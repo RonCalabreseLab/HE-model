@@ -18,3 +18,8 @@ end
 function get_param (parrow, num)
   return {getarg {arglist {parrow}} -arg {num}}
 end
+
+// Set gmax value normalized by P file value
+function set_gmax_norm (path, param_num)
+  setfield {path} gmax { {getparam {parrow} {param_num} } / { getfield {path} gmax} }
+end
