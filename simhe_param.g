@@ -1,22 +1,16 @@
 // Parameterized version of HE model. Replaces the G/P file formalism of Damon. 
-// $ parameters are overwritten with Perl.
-// TODO: create 00_00_00..._inputs.g file from this?
 
 // Sets parameters and calls simhe.g
-
-//cd /var/tmp/dlamb/evolution
+float PI = 3.14159
+float syne_gbar
+str sgetaskid = "" // {getenv SGE_TASK_ID}
 
 str HEganglia = "8 12"
-str inputdir = "$INPUTDIR" // could be subjected to change with params
-include $INPUTDIR/synaptic_wts_new.g
 
 str outputfileroot = ""
 str pfile = "simhe.p" // load generic P file and then overwrite parameters
-// TODO: make sure to calculate Ca_conc = (6.5e-8 - 4e-8 * this->neurite_CaS)
 
-// TODO: the following should go in assignParameters?
-float syne_gbar = $SYNE_GBAR
-
+/*
 // For reading parameters from the environment variable
 include readParameters
 
@@ -24,8 +18,12 @@ include readParameters
 str parrow = {read_env_params}
 echo "Parameter row: " {parrow}
 
+// TODO: include part of simhe.g until readcell [no! keep P file, there are multiple cells in the simulation!]
+
 // assign parameters to Genesis variables 
 // read Genesis variable names and assign all parameters
 include assignParameters
+*/
 
+// TODO: include rest of simhe.g
 include simhe.g

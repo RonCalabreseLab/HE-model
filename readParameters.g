@@ -1,6 +1,7 @@
-// function to read variable parameter values from environment variable
+// Function to read variable parameter values from environment variable.
+// Assume there is only one
 function read_env_params
-  str parrow = {getenv GENESIS_PAR_ROW}
+  parrow = {getenv GENESIS_PAR_ROW}
 
   if ({parrow} == "")
     echo "*********************************************************************"
@@ -10,16 +11,32 @@ function read_env_params
     echo "*********************************************************************"
     quit
   end
-
-  return {parrow}
 end
 
-// from the parameter string (parrow), return parameter number (num)
-function get_param (parrow, num)
+// From the parameter string (parrow), return parameter number (num)
+function get_param (num)
   return {getarg {arglist {parrow}} -arg {num}}
 end
 
-// Set gmax value normalized by P file value
-function set_gmax_norm (path, param_num)
-  setfield {path} gmax { {getparam {parrow} {param_num} } / { getfield {path} gmax} }
+// convert from integer param value to specific gmax value
+function get_gmax_spec (path, param_num)
+  return { {getparam {param_num} } / { getfield {path} gmax} }
+end
+
+// returns compartment surface
+function calc_surf (path)
+  return { PI * { getfield {path} dia }  * { getfield {path} len} }
+end
+
+// Set gmax value normalized by P file value and multiplied by compartment area
+function set_gmax_par (path, chan, param_num)
+  setfield {path} gmax { {get_gmax_spec {path} {param_num}} * \
+      { calc_surf { path } } }
+end
+
+// Set gmax for all neurites
+function set_neurites_par (chan, param_num)
+  set_gmax_par /neurite1/ { chan } { param_num }
+  set_gmax_par /neurite2/ { chan } { param_num }
+  set_gmax_par /neurite3/ { chan } { param_num }
 end

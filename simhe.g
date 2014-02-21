@@ -6,7 +6,8 @@
 //str inputduration = 100//90  // seconds
 str inputsamplerate = 1000 //samples/second
 int verbose = 1
-str sgetaskid = {getenv SGE_TASK_ID}
+// CG: moved to _param
+//str sgetaskid = {getenv SGE_TASK_ID}
 
 // sim options (to move to another file for evolution): 
 //str outputfileroot = "./Debug/"  // defined in calling .g for evo alg
@@ -161,8 +162,8 @@ reset
 //fiInhibitionCurve 1
 
 ///////////////////////////////////////////////////////////////////////////////
-step {inputduration} -t
+//step {inputduration} -t
 
-bye
+//bye
 
 
