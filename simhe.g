@@ -83,6 +83,9 @@ foreach currentMode({arglist {coordmodes}})
 	foreach currentHE({arglist {HEganglia}})
 		echo "    " /HE{currentHE}_{currentMode}
 		readcell {pfile} /HE{currentHE}_{currentMode} -hsolve // hines solver!
+		// function must be defined in run scripts: 
+		// TODO: define extern? make this optional?
+		modify_cell_params /HE{currentHE}_{currentMode} 
 	end
 end
 
