@@ -1,17 +1,21 @@
+// constants
+float PI = 3.14159
+
 // Override HEganglia in .g files (for simulating whole chain)
 //str HEganglia = "8 9 10 11 12 13 14"
+str HEganglia = "8 12"
 
 // input (mod function) settings (varies by input pattern)
 //str inputdir = "/usr/local/lgenesis/evolution_models/PreMotorInput/StandardInputs/Spikes_and_Mod"
 //str inputduration = 100//90  // seconds
 str inputsamplerate = 1000 //samples/second
 int verbose = 1
-// CG: moved to _param
-//str sgetaskid = {getenv SGE_TASK_ID}
 
 // sim options (to move to another file for evolution): 
 //str outputfileroot = "./Debug/"  // defined in calling .g for evo alg
 //str pfile     = "./HE_cell.p"    // ditto
+str outputfileroot = ""
+str pfile = "simhe.p" // load generic P file and then overwrite parameters
 
 //str outputfileroot = {"./Jul22_8to15/" @ he_num @ uniquemodelid}
 // this needs to go into the settings file.. stupid genesis
