@@ -25,9 +25,9 @@ function calc_surf (path)
 end
 
 // convert from integer param value to specific gmax value by
-// dividing to gmax in path (gmax's from P file are the maximal values)
+// dividing by 50 and then scale by gmax in path (gmax's from P file are the maximal values)
 function get_gmax_spec (path, param_num)
-  return { {getparam {param_num} } / { getfield {path} gmax} }
+  return { { {getparam {param_num} } / 50 } * { getfield {path} gmax} }
 end
 
 // Takes specific gmax value and applies to channel scaled by compartment area
