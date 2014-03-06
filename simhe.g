@@ -1,6 +1,3 @@
-// constants
-float PI = 3.14159
-
 // Override HEganglia in .g files (for simulating whole chain)
 //str HEganglia = "8 9 10 11 12 13 14"
 str HEganglia = "8 12"
@@ -14,8 +11,8 @@ int verbose = 1
 // sim options (to move to another file for evolution): 
 //str outputfileroot = "./Debug/"  // defined in calling .g for evo alg
 //str pfile     = "./HE_cell.p"    // ditto
-str outputfileroot = ""
-str pfile = "simhe.p" // load generic P file and then overwrite parameters
+str outputfileroot = "data/"
+str pfile = "../../common/modelHE/simhe.p" // load generic P file and then overwrite parameters
 
 //str outputfileroot = {"./Jul22_8to15/" @ he_num @ uniquemodelid}
 // this needs to go into the settings file.. stupid genesis
@@ -169,8 +166,8 @@ reset
 //fiInhibitionCurve 1
 
 ///////////////////////////////////////////////////////////////////////////////
+// CG: disabled for getting the Genesis shell and to inspect the model
 //step {inputduration} -t
-
 //bye
 
 
