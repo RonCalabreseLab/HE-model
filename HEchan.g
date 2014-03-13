@@ -15,7 +15,7 @@
 */
 
 include filltable.g
-include constants.g
+include HEconstants.g
 // based on the file HNchan.g used in Adam and Andrew's models
 
 

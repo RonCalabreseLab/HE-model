@@ -87,6 +87,8 @@ foreach currentMode({arglist {coordmodes}})
 		// function must be defined in run scripts: 
 		// TODO: define extern? make this optional?
 		modify_cell_params /HE{currentHE}_{currentMode} 
+        // need to update hines structures?
+		call /HE{currentHE}_{currentMode} HRESTORE
 	end
 end
 
@@ -167,7 +169,7 @@ reset
 
 ///////////////////////////////////////////////////////////////////////////////
 // CG: disable for getting the Genesis shell and to inspect the model
-//step {inputduration} -t
-//bye
+step {inputduration} -t
+bye
 
 
