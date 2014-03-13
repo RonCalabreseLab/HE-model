@@ -166,7 +166,7 @@ reset
 //fiInhibitionCurve 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// CG: disabled for getting the Genesis shell and to inspect the model
+// CG: disable for getting the Genesis shell and to inspect the model
 //step {inputduration} -t
 //bye
 

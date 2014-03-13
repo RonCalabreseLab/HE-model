@@ -1,7 +1,7 @@
 // Function to read variable parameter values from environment variable.
 
 // constants
-float PI = 3.14159
+float PI = 3.14159265359
 
 // Assume there is only one
 str parrow
@@ -30,18 +30,46 @@ function calc_surf (path)
   return { PI * { getfield {path} dia }  * { getfield {path} len} }
 end
 
+// returns volume of compartment at path
+function calc_vol (path)
+  return { PI * {{ getfield {path} dia } ** 2}  * { getfield {path} len} / 4 }
+end
+
+// finds the target field in element
+// if tabchannel, then Gbar
+// if Ca_concen, then B, etc.
+function find_def_field (path)
+  str fieldname
+  // Is it a tabchannel?
+  if ( {exists {path} Gbar} )
+    fieldname = "Gbar"
+  elif ( {exists {path} B} ) 
+    // or Ca_concen?
+    fieldname = "B"
+  end
+  return {fieldname}
+end
+
+// return proper readcell parameter (Gbar, B, etc) value from element at path
+function get_gmax (path)
+  return { getfield {path} { find_def_field {path}}}
+end
+
 // convert from integer param value to specific gmax value by
 // dividing by 50 and then scale by gmax in path (gmax's from P file are the maximal values)
+// (already scaled by compartment area)
 function get_gmax_spec (path, param_num)
-  return { { {get_param {param_num} } / 50 } * { getfield {path} Gbar} }
+  return { { {get_param {param_num} } / 50 } * { get_gmax {path} } }
 end
 
-// Takes specific gmax value and applies to channel scaled by compartment area
+// Takes specific gmax value and applies to channel 
+// No need to scale by compartment area because P file value is already scaled
+// removed: { calc_surf { path } }
 function set_gmax (path, chan, value)
-  setfield {path}/{chan} Gbar { { value } * { calc_surf { path } } }
+  setfield {path}/{chan} { find_def_field {path}/{chan} } { { value } }
 end
 
-// Set gmax value normalized by P file value and multiplied by compartment area
+// Set gmax value from integer parameter
 function set_gmax_par (path, chan, param_num)
   set_gmax {path} {chan} {get_gmax_spec {path}/{chan} {param_num}}
 end
@@ -54,6 +82,7 @@ function set_neurites_par (path, chan, param_num)
 end
 
 // Set gmax for all neurites from value
+// (obsolete)
 function set_neurites_val (path, chan, value)
   set_gmax {path}/neurite1 { chan } { value }
   set_gmax {path}/neurite2 { chan } { value }
