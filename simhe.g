@@ -87,8 +87,6 @@ foreach currentMode({arglist {coordmodes}})
 		// function must be defined in run scripts: 
 		// TODO: define extern? make this optional?
 		modify_cell_params /HE{currentHE}_{currentMode} 
-        // need to update hines structures?
-		call /HE{currentHE}_{currentMode} HRESTORE
 	end
 end
 
@@ -142,8 +140,12 @@ foreach currentMode({arglist {coordmodes}})
 		   comptmode       1                       \
 		   chanmode        1                       \
 		   outclock        1                       \
-		   storemode       1	// calcmode        0                       
-		setmethod 11 // 11 crank-nocolson
+		   storemode       1	// calcmode        0 
+        // chanmode: 1 safest: 24s on new simulacrum
+        //           2 for saving Vm only: 12s but synapse messages don't work
+        //           3 none saved: 12s but synapse messages don't work
+        //           4 saves Im, etc: 14s but synapse messages don't work
+		setmethod 11 // 11 Crank-Nicholson
 		call /HE{currentHE}_{currentMode} SETUP
 	end
 end
