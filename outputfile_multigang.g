@@ -87,8 +87,10 @@ function save_soma_Vm(HEganglia)
 	str currentHE, filename, objname
 	// - - -  - - - - - - -  - - - - - - - - -  - SGE_TASK_ID for cluster only
 	foreach currentHE({arglist {HEganglia}})
-		filename = "HE" @ currentHE @ "soma_Vm" @ sgetaskid @ ".txt" //for cluster
+		//filename = "HE" @ currentHE @ "soma_Vm" @ sgetaskid @ ".txt" //for cluster
 		//filename = "HE" @ currentHE @ "soma_Vm.txt"
+        // CG: standardized name for outputs
+		filename = simname @ "_somaVm_HE_" @ currentHE @ "_trial_" @ sgetaskid @ ".txt"
 		objname = "HE" @ currentHE @ "soma_Vm.out"
 		setupOutputFile {filename} {objname}
     	addmsg /HE{currentHE}_peri/soma     {outputelroot}/{objname} SAVE Vm
