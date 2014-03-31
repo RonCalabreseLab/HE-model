@@ -84,7 +84,8 @@ foreach currentMode({arglist {coordmodes}})
 	foreach currentHE({arglist {HEganglia}})
 		echo "    " /HE{currentHE}_{currentMode}
 		readcell {pfile} /HE{currentHE}_{currentMode} -hsolve // hines solver!
-		// function must be defined in run scripts: 
+		// function to possibly modify cell parameters;
+		// must be defined in run scripts: 
 		// TODO: define extern? make this optional?
 		modify_cell_params /HE{currentHE}_{currentMode} 
 	end
@@ -172,6 +173,6 @@ reset
 ///////////////////////////////////////////////////////////////////////////////
 // CG: disable for getting the Genesis shell and to inspect the model
 step {inputduration} -t
-bye
+//bye // instead use genesis -batch
 
 
