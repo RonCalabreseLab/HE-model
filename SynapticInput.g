@@ -126,10 +126,10 @@ function set_slowsyn_wts(coord_modes, input_ids, HE_ganglia)
 	foreach curHE({arglist {HE_ganglia}})
 		foreach curMode({arglist {coord_modes}})
 			foreach curHN ({arglist {input_ids}})	
-  		//		echo {getfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax}
-  		//		echo {{slowratio} * {getfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax}} 				
+  			//		echo {getfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax}
+  			//		echo {{slowratio} * {getfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax}} 				
 				setfield /HE{curHE}_{curMode}/synaptic/SynS_slow{curHN} gmax {{slowratio} * {getfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax}} 
-  		//		echo {getfield /HE{curHE}_{curMode}/synaptic/SynS_slow{curHN} gmax}
+  			//		echo {getfield /HE{curHE}_{curMode}/synaptic/SynS_slow{curHN} gmax}
 			end
 		end
 	end
@@ -148,7 +148,7 @@ function set_synE_only(coord_modes, input_ids, HE_ganglia)
 			foreach curHN ({arglist {input_ids}})	
 				setfield /HE{curHE}_{curMode}/synaptic/SynS_slow{curHN} gmax 0
 				setfield /HE{curHE}_{curMode}/synaptic/SynS{curHN} gmax 0
-  			end
+  		end
 		end
 	end
 end
@@ -156,84 +156,84 @@ end
 
 // uses hard coded modes (sync/peri)
 function InstantiateSynE(curHE)
-	str curHE
+  str curHE
+  
+  create neutral HE{curHE}_peri_SynE 
+  create neutral HE{curHE}_sync_SynE 
+  
+  copy /library/SynE HE{curHE}_peri_SynE 	
+  copy /library/SynE HE{curHE}_sync_SynE 
 
-	create neutral HE{curHE}_peri_SynE 
-	create neutral HE{curHE}_sync_SynE 
-	
-	copy /library/SynE HE{curHE}_peri_SynE 	
-	copy /library/SynE HE{curHE}_sync_SynE 
+  // sync
+  addmsg HE{curHE}_peri/synaptic		HE{curHE}_sync_SynE/SynE VOLTAGE Vm
+  addmsg HE{curHE}_sync/synaptic 		HE{curHE}_sync_SynE/SynE POSTVOLTAGE Vm		
+  addmsg HE{curHE}_sync_SynE/SynE 	HE{curHE}_sync/synaptic INJECT Ik	
 
-	// sync
-	addmsg HE{curHE}_peri/synaptic		HE{curHE}_sync_SynE/SynE VOLTAGE Vm
-	addmsg HE{curHE}_sync/synaptic 		HE{curHE}_sync_SynE/SynE POSTVOLTAGE Vm		
-	addmsg HE{curHE}_sync_SynE/SynE 	HE{curHE}_sync/synaptic INJECT Ik	
-
-	// peri
-	addmsg HE{curHE}_sync/synaptic 		HE{curHE}_peri_SynE/SynE VOLTAGE Vm
-	addmsg HE{curHE}_peri/synaptic 		HE{curHE}_peri_SynE/SynE POSTVOLTAGE Vm
-	addmsg HE{curHE}_peri_SynE/SynE		HE{curHE}_peri/synaptic INJECT Ik
+  // peri
+  addmsg HE{curHE}_sync/synaptic 		HE{curHE}_peri_SynE/SynE VOLTAGE Vm
+  addmsg HE{curHE}_peri/synaptic 		HE{curHE}_peri_SynE/SynE POSTVOLTAGE Vm
+  addmsg HE{curHE}_peri_SynE/SynE		HE{curHE}_peri/synaptic INJECT Ik
 
 end
 
 // NOTE: you cannot change the time step after setting the delay table nsteps (by calling this function)
 //  todo: add a 'reset' of nsteps function to be called after changing the simulation dt
 function make_syn_connections( coord_modes, input_ids, HE_ganglia, delayPerGanglion, dt, defaultmod)
-	str input_ids  //= eg "3 4 6 7 X" //for the source of the input 
-	str coord_modes //= eg "peri sync"
-	str HE_ganglia // = eg "8 9 10 11 12 13 14"
-	float delayPerGanglion, dt, defaultmod
+  str input_ids  //= eg "3 4 6 7 X" //for the source of the input 
+  str coord_modes //= eg "peri sync"
+  str HE_ganglia // = eg "8 9 10 11 12 13 14"
+  float delayPerGanglion, dt, defaultmod
 
-	int nsteps
-	float delaytime
-	str curHN, curMode, curHE
-	
-	foreach curHE({arglist {HE_ganglia}})
-		InstantiateSynE {curHE}
-		// setup messages (and delay table for mod function)
-		str curHEname, modTablename
-		foreach curMode({arglist {coord_modes}})
-			foreach curHN ({arglist {input_ids}})	
-			    // create buffer table in each HE's synaptic compartment
-			    //echo "  making:  " /HE{curHE}_{curMode}/synaptic/HN{curHN}_ModDelay 
-		//filename = "HE" @ currentHE @ "soma_Vm.txt"
-			    curHEname = "HE" @ {curHE} @ "_" @ {curMode}
-			  //  echo {curHEname}
-			    modTablename = "HNinput/HN" @ {curHN} @ "_" @ {curMode} @ "_" @ {curHEname} @ "_ModDelay"
-			    //echo {modTablename}
-			    
-				create table {modTablename}
-				setfield {modTablename} step_mode 6
-			    if ({strcmp {curHN} "X"} == 0)
-        			echo "WARNING: Delay from HNX per mode not implemented"
-        			delaytime = {({curHE}-3)*delayPerGanglion}
+  int nsteps
+  float delaytime
+  str curHN, curMode, curHE
+    
+  foreach curHE({arglist {HE_ganglia}})
+    InstantiateSynE {curHE}
+    // setup messages (and delay table for mod function)
+    str curHEname, modTablename
+    foreach curMode({arglist {coord_modes}})
+      foreach curHN ({arglist {input_ids}})	
+        // create buffer table in each HE's synaptic compartment
+        //echo "  making:  " /HE{curHE}_{curMode}/synaptic/HN{curHN}_ModDelay 
+        //filename = "HE" @ currentHE @ "soma_Vm.txt"
+        curHEname = "HE" @ {curHE} @ "_" @ {curMode}
+        //  echo {curHEname}
+        modTablename = "HNinput/HN" @ {curHN} @ "_" @ {curMode} @ "_" @ {curHEname} @ "_ModDelay"
+        //echo {modTablename}
+        
+        create table {modTablename}
+        setfield {modTablename} step_mode 6
+        if ({strcmp {curHN} "X"} == 0)
+          echo "WARNING: Delay from HNX per mode not implemented"
+          delaytime = {({curHE}-3)*delayPerGanglion}
 				else
-					delaytime = {({curHE}-{curHN})*{delayPerGanglion}}
-				//	nsteps = {round {(({curHE}-{curHN})*{delayPerGanglion})/{dt}}}
-				end
-       			nsteps = {round {delaytime/dt}}
-			//	echo {curHE} "-" {curHN} "  " {nsteps}
-				call {modTablename} TABCREATE {nsteps-1} 0 {nsteps-1}
-			//	echo "bump"
-				setfield {modTablename} table ==={defaultmod}
-				// link mod table to buffer
-				addmsg /HNinput/HN{curHN}_{curMode}_mod {modTablename} INPUT output
-				// link buffer to synchan
-				addmsg  {modTablename}  /{curHEname}/synaptic/SynS{curHN} MOD output
-				// link spikes to synchan 
-				addmsg /HNinput/HN{curHN}_{curMode}_spikes/spike /{curHEname}/synaptic/SynS{curHN} SPIKE
-				setfield /{curHEname}/synaptic/SynS{curHN} synapse[0].delay {delaytime}
-				
-				// Add links to slow synchan: ----------------------
-				// link buffer to synchan
-				addmsg  {modTablename}  /{curHEname}/synaptic/SynS_slow{curHN} MOD output
-				// link spikes to synchan 
-				addmsg /HNinput/HN{curHN}_{curMode}_spikes/spike /{curHEname}/synaptic/SynS_slow{curHN} SPIKE
-				setfield /{curHEname}/synaptic/SynS_slow{curHN} synapse[0].delay {delaytime}
-				// end slow synchan section ------------------------
-  
-			end
-		end
+          delaytime = {({curHE}-{curHN})*{delayPerGanglion}}
+          //	nsteps = {round {(({curHE}-{curHN})*{delayPerGanglion})/{dt}}}
+        end
+        nsteps = {round {delaytime/dt}}
+        //	echo {curHE} "-" {curHN} "  " {nsteps}
+        call {modTablename} TABCREATE {nsteps-1} 0 {nsteps-1}
+        //	echo "bump"
+        setfield {modTablename} table ==={defaultmod}
+        // link mod table to buffer
+        addmsg /HNinput/HN{curHN}_{curMode}_mod {modTablename} INPUT output
+        // link buffer to synchan
+        addmsg  {modTablename}  /{curHEname}/synaptic/SynS{curHN} MOD output
+        // link spikes to synchan 
+        addmsg /HNinput/HN{curHN}_{curMode}_spikes/spike /{curHEname}/synaptic/SynS{curHN} SPIKE
+        setfield /{curHEname}/synaptic/SynS{curHN} synapse[0].delay {delaytime}
+        
+        // Add links to slow synchan: ----------------------
+        // link buffer to synchan
+        addmsg  {modTablename}  /{curHEname}/synaptic/SynS_slow{curHN} MOD output
+        // link spikes to synchan 
+        addmsg /HNinput/HN{curHN}_{curMode}_spikes/spike /{curHEname}/synaptic/SynS_slow{curHN} SPIKE
+        setfield /{curHEname}/synaptic/SynS_slow{curHN} synapse[0].delay {delaytime}
+        // end slow synchan section ------------------------
+      
+    end
 	end
+end
 end
 
