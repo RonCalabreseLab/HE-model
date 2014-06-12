@@ -21,89 +21,88 @@ function loadHNinput(coord_modes, input_ids, rootdir, length, samplefreq)
   int nsamples = length * samplefreq 
   float Vm	
   if ({verbose} == 1)
-	echo "Loading HN spike times and presynaptic voltage tables from " {rootdir}
+		echo "Loading HN spike times and presynaptic voltage tables from " {rootdir}
   end
   str curMode, curID
   pushe /  
-  create neutral HNinput
-
- // loop over modes and input IDs
-  foreach curMode({arglist {coord_modes}})
-    foreach curID ({arglist {input_ids}})
-      if ({verbose} == 1)
-        echo "   " HN{curID}_{curMode} into HNinput/{curID}_{curMode}_spikes
-      end
-      // create a timetable for each mode-input ID pair
-      create timetable HNinput/HN{curID}_{curMode}_spikes
-      // initialize timetable
-      setfield HNinput/HN{curID}_{curMode}_spikes maxtime 2000 method 4 act_val 1.0 fname {rootdir}/HN{curID}_{curMode}
-      // load data into timetable
-      call HNinput/HN{curID}_{curMode}_spikes TABFILL
-      // create a spikegen to translate spiketimes into SPIKE messages to the synchans
-      create spikegen HNinput/HN{curID}_{curMode}_spikes/spike
-      setfield HNinput/HN{curID}_{curMode}_spikes/spike output_amp 1 thresh 0.5 abs_refract 0.005
-      addmsg HNinput/HN{curID}_{curMode}_spikes HNinput/HN{curID}_{curMode}_spikes/spike INPUT activation
-      if ({verbose} == 1)
-        echo "   " HN{curID}_{curMode}_mod into HNinput/HN{curID}_{curMode}_mod
-	  end
-	  // create a voltage table for the presynaptic (modulation) waveform 		
-      create table HNinput/HN{curID}_{curMode}_mod
-      setfield HNinput/HN{curID}_{curMode}_mod step_mode 2 stepsize 0
-      call HNinput/HN{curID}_{curMode}_mod TABCREATE {nsamples} 0 {length - 1/samplefreq}
-      file2tab {rootdir}/HN{curID}_{curMode}_mod HNinput/HN{curID}_{curMode}_mod table -xy {nsamples} 
-      // debug //			
-      //tab2file ./Debug/testsyn{curID}table_{curMode}_new HNinput/HN{curID}_{curMode}_mod table -mode xy -overwrite
-    end
-  end
+		create neutral HNinput
+		
+		// loop over modes and input IDs
+		foreach curMode({arglist {coord_modes}})
+			foreach curID ({arglist {input_ids}})
+				if ({verbose} == 1)
+					echo "   " HN{curID}_{curMode} into HNinput/{curID}_{curMode}_spikes
+				end
+				// create a timetable for each mode-input ID pair
+				create timetable HNinput/HN{curID}_{curMode}_spikes
+				// initialize timetable
+				setfield HNinput/HN{curID}_{curMode}_spikes maxtime 2000 method 4 act_val 1.0 fname {rootdir}/HN{curID}_{curMode}
+				// load data into timetable
+				call HNinput/HN{curID}_{curMode}_spikes TABFILL
+				// create a spikegen to translate spiketimes into SPIKE messages to the synchans
+				create spikegen HNinput/HN{curID}_{curMode}_spikes/spike
+				setfield HNinput/HN{curID}_{curMode}_spikes/spike output_amp 1 thresh 0.5 abs_refract 0.005
+				addmsg HNinput/HN{curID}_{curMode}_spikes HNinput/HN{curID}_{curMode}_spikes/spike INPUT activation
+				if ({verbose} == 1)
+					echo "   " HN{curID}_{curMode}_mod into HNinput/HN{curID}_{curMode}_mod
+				end
+				// create a voltage table for the presynaptic (modulation) waveform 		
+				create table HNinput/HN{curID}_{curMode}_mod
+				setfield HNinput/HN{curID}_{curMode}_mod step_mode 2 stepsize 0
+				call HNinput/HN{curID}_{curMode}_mod TABCREATE {nsamples} 0 {length - 1/samplefreq}
+				file2tab {rootdir}/HN{curID}_{curMode}_mod HNinput/HN{curID}_{curMode}_mod table -xy {nsamples} 
+				// debug //			
+				//tab2file ./Debug/testsyn{curID}table_{curMode}_new HNinput/HN{curID}_{curMode}_mod table -mode xy -overwrite
+			end
+		end
   pope
-  
 end
 
 
 // creates generic SynS (synchan + synS-mod chan) objects
 function createHNsyn(input_ids)
-
+	
   str input_ids  // 3, 4, 6, 7, or X for the source of the input 
   str HE_ids    // ganglia # of HE cells in which to create the SynS objects
   //echo "Creating SynS (mod and synchan) objects for HN: " {input_ids} 
   str curID, chanpath
  
- // loop over modes and input IDs
-
-    foreach curID ({arglist {input_ids}})
+	// loop over modes and input IDs
+  foreach curID ({arglist {input_ids}})
        
-       /* mod object not used anymore - mod waveform directly created and passed to synchan
+    /* mod object not used anymore - mod waveform directly created and passed to synchan
 		*/
 		
-        chanpath = "SynS" @ {curID}
-        create  synchan {chanpath}
-        if ({strcmp {curID} "X"} == 0)
-        	echo {curID} ":X"
-        	setfield        ^			\
-        			Ek		-0.0625 	\
-        			tau1	1.0e-2 		\      // sec
-        			tau2	4.0e-3		\      // sec
-        			gmax	0               // Siemens  	
-        else // synchan from 2 4 6 7
-        	setfield        ^			\
-        			Ek		-0.0625		\
-        			tau1	1.25e-2 		\      // sec // adjusted for testing the result of faster dynamics, formerly 5e-2s
-        			tau2	4.0e-3		\      // sec
-        			gmax	0               // Siemens
+    chanpath = "SynS" @ {curID}
+    create  synchan {chanpath}
+    if ({strcmp {curID} "X"} == 0)
+      echo {curID} ":X"
+      setfield        ^			\
+        Ek		-0.0625 	\
+        tau1	1.0e-2 		\      // sec
+        tau2	4.0e-3		\      // sec
+        gmax	0               // Siemens  	
+			
+		else // synchan from 2 4 6 7
+      setfield        ^			\
+        Ek		-0.0625		\
+        tau1	1.25e-2 		\      // sec // adjusted for testing the result of faster dynamics, formerly 5e-2s
+        tau2	4.0e-3		\      // sec
+        gmax	0               // Siemens
         
         
-        	chanpath = "SynS_slow" @ {curID}
+      chanpath = "SynS_slow" @ {curID}
 			//echo "Creating slow aspect of synaptic input: " {chanpath}
-        	create  synchan {chanpath}
-       	  	setfield        ^			\  // Formerly, this was approximated with a single synchan (above). Slower dynamics are used here.
-        			Ek		-0.0625		\
-        			tau1	15e-2 		\   	
-        			tau2	4.0e-3		\      // sec
-        			gmax	0               // Siemens
-        end
-    end
-  
-end
+      create  synchan {chanpath}
+				setfield        ^			\  // Formerly, this was approximated with a single synchan (above). Slower dynamics are used here.
+        	Ek		-0.0625		\
+        	tau1	15e-2 		\   	
+        	tau2	4.0e-3		\      // sec
+        	gmax	0               // Siemens
+				
+			end
+		end
+	end
 
 
 // adjusted to be compatible with hines by moving SynE outside of the cell

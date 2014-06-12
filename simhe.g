@@ -32,6 +32,7 @@ str currentHE, currentMode
 // set pwd
 //cd /usr/local/lgenesis/evolution_models/
 
+
 if ({verbose} == 1)
 	setprompt "HE Model Version 9.2 (beta) chain-sim"
 	echo       ***********************
@@ -97,7 +98,7 @@ make_syn_connections {coordmodes} {HNganglia} {HEganglia} 0.020 {dt} 0.1
 
 
 foreach currentHE({arglist {HEganglia}})
-//	echo "    Setting syn weights" /HE{currentHE}
+	//	echo "    Setting syn weights" /HE{currentHE}
 	set_syn_wts{currentHE}
 	set_gbar {syne_gbar} {currentHE}
 end
@@ -137,15 +138,15 @@ save_soma_Vm {HEganglia}
 foreach currentMode({arglist {coordmodes}})
 	foreach currentHE({arglist {HEganglia}})
 		setfield /HE{currentHE}_{currentMode} \
-		   path /HE{currentHE}_{currentMode}/##[][TYPE=compartment]  \
-		   comptmode       1                       \
-		   chanmode        1                       \
-		   outclock        1                       \
-		   storemode       1	// calcmode        0 
-        // chanmode: 1 safest: 24s on new simulacrum
-        //           2 for saving Vm only: 12s but synapse messages don't work
-        //           3 none saved: 12s but synapse messages don't work
-        //           4 saves Im, etc: 14s but synapse messages don't work
+		  path /HE{currentHE}_{currentMode}/##[][TYPE=compartment]  \
+		  comptmode       1                       \
+		  chanmode        1                       \
+		  outclock        1                       \
+		  storemode       1	// calcmode        0 
+    // chanmode: 1 safest: 24s on new simulacrum
+    //           2 for saving Vm only: 12s but synapse messages don't work
+    //           3 none saved: 12s but synapse messages don't work
+    //           4 saves Im, etc: 14s but synapse messages don't work
 		setmethod 11 // 11 Crank-Nicholson
 		call /HE{currentHE}_{currentMode} SETUP
 	end
