@@ -88,7 +88,7 @@ foreach currentMode({arglist {coordmodes}})
 		// function to possibly modify cell parameters;
 		// must be defined in run scripts: 
 		// TODO: define extern? make this optional?
-		modify_cell_params /HE{currentHE}_{currentMode} 
+		modify_cell_params {currentHE} {currentMode} 
 	end
 end
 
@@ -100,7 +100,9 @@ make_syn_connections {coordmodes} {HNganglia} {HEganglia} 0.020 {dt} 0.1
 foreach currentHE({arglist {HEganglia}})
 	//	echo "    Setting syn weights" /HE{currentHE}
 	set_syn_wts{currentHE}
-	set_gbar {syne_gbar} {currentHE}
+	//set_syne_gbar {syne_gbar} {currentHE}
+	// moved to modify_syn_params
+	modify_syn_params {currentHE}
 end
 set_slowsyn_wts {coordmodes} {HNganglia} {HEganglia} {slowratio}
 // must setup output (save) messages before calling SETUP on hines-solved elements
