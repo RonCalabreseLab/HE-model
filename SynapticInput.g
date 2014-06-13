@@ -106,7 +106,7 @@ function createHNsyn(input_ids)
 
 
 // adjusted to be compatible with hines by moving SynE outside of the cell
-function set_gbar(gbar, currentHE)
+function set_syne_gbar(gbar, currentHE)
 	float gbar
 	str currentHE
 	setfield /HE{currentHE}_peri_SynE/SynE Gbar {gbar}
