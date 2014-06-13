@@ -124,7 +124,7 @@ function set_neurites_par (path, chan, param_num)
 end
 
 // Set gmax for all neurites from param name
-function set_neurites_par (path, chan, param_num)
+function set_neurites_par_byname (path, chan, param_name)
   set_gmax_par_byname {path}/neurite1 { chan } { param_name }
   set_gmax_par_byname {path}/neurite2 { chan } { param_name }
   set_gmax_par_byname {path}/neurite3 { chan } { param_name }
