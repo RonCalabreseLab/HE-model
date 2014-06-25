@@ -99,7 +99,8 @@ function compressOutputFiles(deleteorigs)
   str outputel
 	foreach outputel ({el {outputelroot}/# })
 		str filename = {getfield {outputel} filename}
-		echo "Compressing "{filename}
+		echo "Flushing & compressing: "{filename}
+		call {outputel} DELETE
 		sh gen2flac {filename}
 		if ({deleteorigs} == 1)
 			sh rm {filename}
