@@ -11,13 +11,17 @@ int verbose = 1
 // sim options (to move to another file for evolution): 
 //str outputfileroot = "./Debug/"  // defined in calling .g for evo alg
 //str pfile     = "./HE_cell.p"    // ditto
-str outputfileroot = "data/"
+str outputfileroot = "data/comp/"
+int compressoutput = 1
 str pfile = "../../common/modelHE/simhe.p" // load generic P file and then overwrite parameters
 
 //str outputfileroot = {"./Jul22_8to15/" @ he_num @ uniquemodelid}
 // this needs to go into the settings file.. stupid genesis
 
 //include ./PreMotorInput/StandardInputs/synaptic_wts_delays_new.g
+
+// Options:
+str output_type = "binary" 			// ascii or binary
 
 //----------------------------
 // generic parameters
@@ -178,4 +182,8 @@ reset
 step {inputduration} -t
 //bye // instead use genesis -batch
 
-
+// compress output files if requested
+if ({compressoutput} == 1)
+	echo "Compressing"
+	compressOutputFiles 1
+end

@@ -60,9 +60,9 @@ function bye
 end
 
 /*	setupOutputFile creates an asc_file to save data to with the specified parameters:
-	OutputFileName	:	name of output file
+	OutputFileName	:	name of output file (without suffix)
 	OutputElement 	:	name of output element to create 
-	e.g. setupOutputFile "example.txt" "demo.out"
+	e.g. setupOutputFile "example" "demo.out"
 	will create demo.out in the outputelroot
 */
 function setupOutputFile(OutputFileName, OutputElement)
@@ -71,16 +71,41 @@ function setupOutputFile(OutputFileName, OutputElement)
 		echo "  Creating output element: " {outputelroot}/{OutputElement} "  filename:" {outputfileroot}{OutputFileName}
 	end
 	if(0=={exists {outputelroot}/{OutputElement}})
-		create asc_file {outputelroot}/{OutputElement}
-		setfield {outputelroot}/{OutputElement} append 0 \
-		            filename {outputfileroot}{OutputFileName} \
-		            initialize 1 leave_open 1 flush 0 float_format {outputformat}
-		useclock {outputelroot}/{OutputElement} 1
+		if ({strcmp {output_type} "ascii"}==0)
+			create asc_file {outputelroot}/{OutputElement}
+			setfield {outputelroot}/{OutputElement} append 0 \
+		    filename {outputfileroot}{OutputFileName}".txt" \
+		    initialize 1 leave_open 1 flush 0 float_format {outputformat}
+			useclock {outputelroot}/{OutputElement} 1
+		elif ({strcmp {output_type} "binary"}==0)
+			create disk_out {outputelroot}/{OutputElement}
+			setfield {outputelroot}/{OutputElement} append 0 \
+		    filename {outputfileroot}{OutputFileName}".bin" \
+		    initialize 1 leave_open 1 flush 0
+			useclock {outputelroot}/{OutputElement} 1
+		else
+			error "output_type not recognized: "{output_type}". Must be one of ascii or binary."
+		end
 	else
 		echo "error - attempted to duplicate existing element: " {outputelroot}/{OutputElement}
 	end	
 end
 
+/* compressOutputFiles - Cycle through all output elements and
+compress files in the same place. 
+deleteorigs - If 1, delete original file and leave only compressed file.
+*/
+function compressOutputFiles(deleteorigs)
+  str outputel
+	foreach outputel ({el {outputelroot}/# })
+		str filename = {getfield {outputel} filename}
+		echo "Compressing "{filename}
+		sh gen2flac {filename}
+		if ({deleteorigs} == 1)
+			sh rm {filename}
+		end
+	end
+end
 
 function save_soma_Vm(HEganglia)
 	str HEganglia
@@ -89,11 +114,11 @@ function save_soma_Vm(HEganglia)
 	foreach currentHE({arglist {HEganglia}})
 		//filename = "HE" @ currentHE @ "soma_Vm" @ sgetaskid @ ".txt" //for cluster
 		//filename = "HE" @ currentHE @ "soma_Vm.txt"
-        // CG: standardized name for outputs
-		filename = simname @ "_somaVm_HE_" @ currentHE @ "_trial_" @ sgetaskid @ ".txt"
+    // CG: standardized name for outputs
+		filename = simname @ "_somaVm_HE_" @ currentHE @ "_trial_" @ sgetaskid
 		objname = "HE" @ currentHE @ "soma_Vm.out"
 		setupOutputFile {filename} {objname}
-    	addmsg /HE{currentHE}_peri/soma     {outputelroot}/{objname} SAVE Vm
+    addmsg /HE{currentHE}_peri/soma     {outputelroot}/{objname} SAVE Vm
 		addmsg /HE{currentHE}_sync/soma     {outputelroot}/{objname} SAVE Vm
 	end
 end
