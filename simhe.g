@@ -11,7 +11,7 @@ int verbose = 1
 // sim options (to move to another file for evolution): 
 //str outputfileroot = "./Debug/"  // defined in calling .g for evo alg
 //str pfile     = "./HE_cell.p"    // ditto
-str outputfileroot = "data/"
+//str outputfileroot = "data/"
 int compressoutput = 1
 str pfile = "../../common/modelHE/simhe.p" // load generic P file and then overwrite parameters
 
