@@ -19,9 +19,10 @@ str outputformat = "%0.8g"
 // the following must be set elsewhere prior to loading this file
 //str outputfileroot = {"./Jul22_8to15/" @ he_num}
 
-// There is no way to check if the directory exists in Genesis, so
-// simply try creating it and ignore if it fails
-mkdir {outputfileroot}
+// There is no way to check if the directory exists in Genesis, so 
+// simply try creating it and ignore if it fails. Use -p to create a
+// multi-level directory hierarchy
+mkdir -p {outputfileroot}
 
 if(0=={exists {outputelroot}})
 	create neutral {outputelroot}
