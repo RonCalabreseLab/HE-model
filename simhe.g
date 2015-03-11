@@ -185,5 +185,5 @@ step {inputduration} -t
 // compress output files if requested
 if ({compressoutput} == 1)
 	echo "Compressing"
-	compressOutputFiles 1
+	compressOutputFiles 1 
 end
