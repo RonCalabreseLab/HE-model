@@ -23,6 +23,10 @@ if(0=={exists {outputelroot}})
 	create neutral {outputelroot}
 end	
 
+// create target directories
+sh {"mkdir -p " @ {tmpdir} @ {outputfileroot}}
+sh {"mkdir -p " @ {outputfileroot}}
+
 /* Function flushAllFiles
 	Flushes /*.out elements off of the root element /
 	If the asc_file object field 'flush' is set to 0 the data is buffered in memory.
@@ -67,19 +71,20 @@ end
 function setupOutputFile(OutputFileName, OutputElement)
 	str OutputFileName, OutputElement
 	if ({verbose} == 1)
-		echo "  Creating output element: " {outputelroot}/{OutputElement} "  filename:" {outputfileroot}{OutputFileName}
+		echo "  Creating output element: " {outputelroot}/{OutputElement} \
+      "  filename:" {tmpdir @ outputfileroot}{OutputFileName}
 	end
 	if(0=={exists {outputelroot}/{OutputElement}})
 		if ({strcmp {output_type} "ascii"}==0)
 			create asc_file {outputelroot}/{OutputElement}
 			setfield {outputelroot}/{OutputElement} append 0 \
-		    filename {outputfileroot}{OutputFileName}".txt" \
+		    filename {tmpdir @ outputfileroot}{OutputFileName}".txt" \
 		    initialize 1 leave_open 1 flush 0 float_format {outputformat}
 			useclock {outputelroot}/{OutputElement} 1
 		elif ({strcmp {output_type} "binary"}==0)
 			create disk_out {outputelroot}/{OutputElement}
 			setfield {outputelroot}/{OutputElement} append 0 \
-		    filename {outputfileroot}{OutputFileName}".bin" \
+		    filename {tmpdir @ outputfileroot}{OutputFileName}".bin" \
 		    initialize 1 leave_open 1 flush 0
 			useclock {outputelroot}/{OutputElement} 1
 		else
@@ -104,6 +109,9 @@ function compressOutputFiles(deleteorigs)
 		if ({deleteorigs} == 1)
 			sh rm {filename}
 		end
+		// Move files to final destination
+    str comp_filename={strsub {filename} .bin .genflac}
+		sh mv {comp_filename} {outputfileroot}
 	end
 end
 
@@ -221,7 +229,7 @@ function debugK_Ca( coord_modes, HE_ganglia, compartments )
 			end
    		end
    		// write header
-   		headtmp = {{outputfileroot}@"HE"@{curHE}@"_K_Ca_Header.txt"}
+   		headtmp = {{tmpdir @ outputfileroot}@"HE"@{curHE}@"_K_Ca_Header.txt"}
    		openfile  {headtmp} w
 		writefile {headtmp} {header}
 		closefile {headtmp}
@@ -331,13 +339,13 @@ function saveCurrents(verbose, savewhich, HE_ganglia, coord_modes)
 		end 
 			
 		
-		openfile {outputfileroot}"HE"{curHE}"_AllCondHeader.txt" w
-		writefile {outputfileroot}"HE"{curHE}"_AllCondHeader.txt" {condheader}
-		closefile {outputfileroot}"HE"{curHE}"_AllCondHeader.txt"
+		openfile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCondHeader.txt" w
+		writefile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCondHeader.txt" {condheader}
+		closefile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCondHeader.txt"
 		
-		openfile {outputfileroot}"HE"{curHE}"_AllCurrHeader.txt" w
-		writefile {outputfileroot}"HE"{curHE}"_AllCurrHeader.txt" {currheader}
-		closefile {outputfileroot}"HE"{curHE}"_AllCurrHeader.txt"
+		openfile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCurrHeader.txt" w
+		writefile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCurrHeader.txt" {currheader}
+		closefile {tmpdir @ outputfileroot}"HE"{curHE}"_AllCurrHeader.txt"
 	end
 end
 
