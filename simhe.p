@@ -1,9 +1,9 @@
 *asymmetric
 *absolute
-*set_global  RM  1.1
+*set_global  RM  2.0
 *set_global  RA  2.5
 *set_global  CM  0.02
-*set_global EREST_ACT -0.040 
+*set_global EREST_ACT -0.090 
 soma      none          0       0       40      40  K1_ron 25 K2_ron 25
 *relative
 neurite1  soma          0       115 0   10.0  K1_ron 375 K2_ron 375 A_ron 50 P_ron 9.5 CaS_ron 0.5 Ca_conc 0 K_Ca 50
