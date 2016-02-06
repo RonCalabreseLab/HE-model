@@ -13,7 +13,11 @@ int verbose = 1
 //str pfile     = "./HE_cell.p"    // ditto
 //str outputfileroot = "data/"
 int compressoutput = 1
-str pfile = "../../common/modelHE/simhe.p" // load generic P file and then overwrite parameters
+
+// Load generic P file and then overwrite parameters.
+// WARNING: This P file has MAXIMAL conductance values that need to be
+// scaled using functions in readParameters.g
+str pfile = "../../common/modelHE/simhe.p" 
 
 //str outputfileroot = {"./Jul22_8to15/" @ he_num @ uniquemodelid}
 // this needs to go into the settings file.. stupid genesis
