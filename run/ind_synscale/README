@@ -10,21 +10,38 @@ After checking out this directory, move it on a new branch for
 creating a new parameter search. Then, explain here the specific
 parameters explored.
 
-Parameter sets:
-
-input5_22B_top_model_pair.par:
-
-Just the top model with input 5/22B from previous search
-(run_synscale).
-
-input5_22B_top_model_ind_synscale.par:
-
-Combination of 80 variations from top model by varying one HN weight
-at a time while keeping others at canonical value; and another 80
-variations of independent HN weights where other weights are set to
-zero.
-
-input5_22B_top_model_limit.par:
-
-Testing the theoretical limit of input pattern by scaling HN3/7
-weights for HE8/12, resp.
+Parameter names:
+soma_K2_HE8       
+neurite_K1_HE8    
+neurite_K2_HE8    
+neurite_A_HE8     
+neurite_P_HE8     
+neurite_CaS_HE8   
+neurite_KCa_HE8   
+synE_HE8          
+axon_Na_HE8       
+axon_K1_HE8       
+axon_K2_HE8       
+axon_A_HE8        
+soma_K1_HE12      
+soma_K2_HE12      
+neurite_K1_HE12   
+neurite_K2_HE12   
+neurite_A_HE12    
+neurite_P_HE12    
+neurite_CaS_HE12  
+neurite_KCa_HE12  
+synE_HE12         
+axon_Na_HE12      
+axon_K1_HE12      
+axon_K2_HE12      
+axon_A_HE12       
+SetCId            
+synS_mult_HE8_HN3 
+synS_mult_HE12_HN3
+synS_mult_HE8_HN4 
+synS_mult_HE12_HN4
+synS_mult_HE8_HN6 
+synS_mult_HE12_HN6
+synS_mult_HE8_HN7 
+synS_mult_HE12_HN7

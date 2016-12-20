@@ -12,3 +12,22 @@ This specific instance allows changing parameters of input pattern
 directory and also synaptic scaling factors, sigmas, for both HEs 8
 and 12.
 
+Parameter names:
+soma_K1       
+soma_K2       
+neurite_K1    
+neurite_K2    
+neurite_A     
+neurite_P     
+neurite_CaS   
+neurite_KCa   
+synE          
+axon_Na       
+axon_K1       
+axon_K2       
+axon_A        
+SetCId        
+inputdir      
+synS_mult_HE8 
+synS_mult_HE12
+trial         
