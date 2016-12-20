@@ -1,0 +1,13 @@
+This directory holds files that pertain to a SimHE simulation that
+allows varying specific parameters. 
+
+To start the simulation, run simhe_*.g with the Leech Genesis (lgenesis). See:
+http://www.biology.emory.edu/research/Calabrese/software.html
+
+After checking out this directory, move it on a new branch for
+creating a new parameter search. Then, explain here the specific
+parameters explored.
+
+This specific instance allows changing parameters of input pattern
+directory and also the synaptic scaling factor, sigma.
+

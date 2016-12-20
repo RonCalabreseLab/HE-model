@@ -1,0 +1,30 @@
+This directory holds files that pertain to a SimHE simulation that
+allows varying specific parameters: 
+- all 8 synaptic weights and 
+- all conductances of the HE8 and 12 motor neurons separately.
+
+To start the simulation, run simhe_*.g with the Leech Genesis (lgenesis). See:
+http://www.biology.emory.edu/research/Calabrese/software.html
+
+After checking out this directory, move it on a new branch for
+creating a new parameter search. Then, explain here the specific
+parameters explored.
+
+Parameter sets:
+
+input5_22B_top_model_pair.par:
+
+Just the top model with input 5/22B from previous search
+(run_synscale).
+
+input5_22B_top_model_ind_synscale.par:
+
+Combination of 80 variations from top model by varying one HN weight
+at a time while keeping others at canonical value; and another 80
+variations of independent HN weights where other weights are set to
+zero.
+
+input5_22B_top_model_limit.par:
+
+Testing the theoretical limit of input pattern by scaling HN3/7
+weights for HE8/12, resp.
