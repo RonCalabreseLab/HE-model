@@ -52,30 +52,26 @@ $ sim_genesis.sh simhe_ind_synscale.g
 
 In order of increasing complexity:
 
-[inputpatters](run/inputpatterns) In addition to the 13 maximal ion
+* [inputpatters](run/inputpatterns) In addition to the 13 maximal ion
   channel and electrical coupling conductance parameters of Lamb
   (2013), it adds a `inputdir` parameter that can take values 1-6 to
   point to one of the input-output datasets in the
   [input-patterns](https://bitbucket.org/calabreselab/input-patterns)
   repository. See the README in the [inputpatters](run/inputpatterns)
   folder for more information.
-
-[synscale](run/synscale) Starts from the `inputpatters` configuration
+* [synscale](run/synscale) Starts from the `inputpatters` configuration
   and adds a global synaptic scaling parameter (sigma) `synS_mult`
   that scales both HE8 and HE12 synaptic weights.
-
-[2synscales](run/2synscales) Replaces the single sigma with two
+* [2synscales](run/2synscales) Replaces the single sigma with two
   parameters, one for each HE neuron, `synS_mult_HE8` and
   `synS_mult_HE12`.
-
-[ind_synscale_1model](run/ind_synscale_1model) Instead of global
+* [ind_synscale_1model](run/ind_synscale_1model) Instead of global
   synaptic multipliers, introduces individual multipliers for each of
   the inputs to the respective HE neurons (e.g.,
   `synS_mult_HE8_HN3`). It also adds a new parameter `SetCId`, which
   points to the index of the original model in the set C found by Lamb
   (2013). This parameter is used for informational reasons - the
   actual parameter values are used for conductances.
-
-[ind_synscale](run/ind_synscale) Still using the individual synaptic
+* [ind_synscale](run/ind_synscale) Still using the individual synaptic
   multipliers like the last case, but allows changing ion channel
   conductance parameters of the HE8 and HE12 neurons independently.
