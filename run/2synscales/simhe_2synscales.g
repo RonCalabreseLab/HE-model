@@ -3,8 +3,11 @@
 // Name the simulations (no _ allowed)
 str simname = "simhe-2synscales"
 
+// Model directory relative to current simulation location
+str relmodeldir = "../../model/"
+
 // Add common model files location
-setenv SIMPATH {getenv SIMPATH} ../../common/modelHE/
+setenv SIMPATH {getenv SIMPATH} {relmodeldir}
 
 // For reading parameters from the environment variable
 include readParameters
